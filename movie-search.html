@@ -46,30 +46,35 @@
   <div id="movies"></div>
 
   <script>
-    const API_KEY = "d2e6994f"; // ← replace this
+    const API_KEY = "d2e6994f"; //OMDb API key 
 
-    async function searchMovies() {
-      const query = document.getElementById("query").value.trim();
-      const status = document.getElementById("status");
-      const list = document.getElementById("movies");
+    async function searchMovies() { //Define an async function (so we can use await inside)
+      const query = document.getElementById("query").value.trim(); //Read what the user typed in the input and remove extra spaces
+      const status = document.getElementById("status"); //Get the status <div> to show messages.
+      const list = document.getElementById("movies"); //Get the movies <div> where we’ll put results.
 
-      list.innerHTML = "";           // clear old results
-      status.textContent = "";       // clear old status
+      list.innerHTML = ""; //Clear previous results before doing a new search.
+      status.textContent = ""; //Clear previous status messages
 
+      //If the user didn’t type anything…
       if (!query) {
         status.textContent = "Please type a movie name.";
         return;
       }
 
-      status.textContent = "Searching…";
+      status.textContent = "Searching…"; //Show a “Searching…” message while we fetch data.
 
       // Build the URL with the search term:
-      const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(query)}`;
+      const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(query)}`; 
+      /*Build the API request URL using a template literal ``.
+        ${API_KEY} inserts your key.
+        ${encodeURIComponent(query)} safely encodes the user’s search text for a URL.
+        s= is the OMDb “search” parameter. */
 
       try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Network response was not ok");
-        const data = await res.json();
+        const res = await fetch(url); //Send the request to the API and wait for the response.
+        if (!res.ok) throw new Error("Network response was not ok"); //If HTTP status isn’t OK (e.g., 404/500), throw an error
+        const data = await res.json(); //Convert the response to a JavaScript object (from JSON)
 
         // OMDb returns { Response: "False", Error: "Movie not found!" } on failures
         if (data.Response === "False") {
@@ -78,16 +83,17 @@
         }
 
         // Show results:
-        status.textContent = `Found ${data.Search.length} result(s).`;
-        data.Search.forEach(movie => {
-          const card = document.createElement("div");
-          card.className = "card";
+        status.textContent = `Found ${data.Search.length} result(s).`; //Tell the user how many results we got
+        data.Search.forEach(movie => { //Loop through each movie in the results array
+          const card = document.createElement("div"); //Create a new <div> for this movie card.
+          card.className = "card"; //Added the card CSS class so it gets styled.
 
+          //building the card’s inner HTML using a template literal
           card.innerHTML = `
             <div class="title">${movie.Title} (${movie.Year})</div>
             <img src="${movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/300x450?text=No+Image"}" alt="${movie.Title}">
           `;
-          list.appendChild(card);
+          list.appendChild(card); //Add the card into the #movies container.
         });
       } catch (err) {
         status.textContent = "Something went wrong. Please try again.";
@@ -95,8 +101,8 @@
       }
     }
 
-    document.getElementById("searchBtn").addEventListener("click", searchMovies);
-    // Optional: Enter key triggers search
+    document.getElementById("searchBtn").addEventListener("click", searchMovies); //When the Search button is clicked, run searchMovies()
+
     document.getElementById("query").addEventListener("keydown", (e) => {
       if (e.key === "Enter") searchMovies();
     });
