@@ -5,7 +5,7 @@
   <title>Movie Search</title>
   <style>
     body { 
-        font-family: Arial, sans-serif; 
+        font-family: 'Times New Roman', Times, serif; 
         max-width: 700px; 
         margin: 2rem auto; 
     }
@@ -39,7 +39,7 @@
 <body>
   <h1>Movie Search</h1>
 
-  <input id="query" type="text" placeholder="Type a movie name…">
+  <input id="query" type="text" placeholder="Type a movie name">
   <button id="searchBtn">Search</button>
 
   <div id="status"></div>
@@ -56,13 +56,13 @@
       list.innerHTML = ""; //Clear previous results before doing a new search.
       status.textContent = ""; //Clear previous status messages
 
-      //If the user didn’t type anything…
+      //If the user didn’t type anything
       if (!query) {
         status.textContent = "Please type a movie name.";
         return;
       }
 
-      status.textContent = "Searching…"; //Show a “Searching…” message while we fetch data.
+      status.textContent = "Searching…"; //Show a Searching message while we fetch data
 
       // Build the URL with the search term:
       const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(query)}`; 
@@ -88,7 +88,7 @@
           const card = document.createElement("div"); //Create a new <div> for this movie card.
           card.className = "card"; //Added the card CSS class so it gets styled.
 
-          //building the card’s inner HTML using a template literal
+          //building the card’s inner HTML using a template literal ``
           card.innerHTML = `
             <div class="title">${movie.Title} (${movie.Year})</div>
             <img src="${movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/300x450?text=No+Image"}" alt="${movie.Title}">
